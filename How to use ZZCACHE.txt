@@ -1,0 +1,46 @@
+How to use theses tools.
+
+Command  ZZS (Just globals stored in Cache. Use SET to local)
+	
+	 ZZS ^TEST(1,type,"black")="123^901.23^yes"    ZZS ^AGENDA(date,person)=reg
+	 // Don't do ZZS ^TEST(1,type,"black")="123^901.23^yes",^AGENDA(date,person)=reg
+
+
+	 ZZS $P(^TEST(1,type,"black"),"^",3)="no"   ZZS $P(^AGENDA(date,person),"|",5)="10am"
+
+
+
+Command  ZZK (Just globals stored in Cache. Use KILL to local)
+	
+	 ZZK ^TEST(1,type,"black")    ZZK ^TEST(1,color)  ZZK ^("red")
+	 // Don't do ZZK ^TEST(1,type,"black"),^TEST(1,"color")
+
+
+Command  ZZL (Just globals stored in Cache. Use LOCK to local)
+
+	 ZZL ^TEST(1,type,"black")    ZZL ^TEST(1,color)  ZZL ^("red")
+	 // Don't do ZZL ^TEST(1,type,"black"),^TEST(1,"color")
+
+	 ZZL +^TEST    ZZL +^AGENDA   ZZL -^TEST
+
+	 ZZL ^TEST:0 IF $ZZT=0 ....  (see $ZZT variable)
+
+
+Function $ZZO (Just globals stored in Cache. Use $Order to local)
+	
+    	 SET A=$ZZO("^TEST",A) QUIT:A=""
+	 SET B=$ZZO("^TEST",A,B) QUIT:B=""
+	 SET C=$ZZO("^TEST",A,B,C) QUIT:C=""
+
+
+Function $ZZT (Just globals stored in Cache. Use $GET to local)
+	
+	 SET REG=$ZZT("^TEST",A,B,C)
+	 SET REG=$ZZT("^",C)
+	 IF $ZZT("^AGENDA",date,person)="" ....
+
+
+Variable $ZZT (Just globals stored in Cache.Use $TEST to local)
+
+	 ZZL ^TEST:0 IF $ZZT=0 ....
+
