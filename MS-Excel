@@ -1,0 +1,21 @@
+	;;How to handle MS-Excel
+  
+  ZSetObj EXCEL=$ZCreateObject("Excel.Application")
+	Set EXCEL.Visible=1
+	Do EXCEL.Workbooks.add ; code for new document
+	Do EXCEL.Range("C14:E15").Select
+	;
+	For J="A","B","C","D","E","F" Do
+	. For K=1:1:10 Do
+	..  Set DUM=J_K
+	..  Do EXCEL.RANGE(DUM).SELECT
+	..  Set EXCEL.ACTIVECELL.FORMULAR1C1=DUM
+	;
+	Do EXCEL.RANGE("A12:F21").SELECT
+	Set STRING=""
+	For J=1:1:10 Do
+	. For K=1:1:6 Set STRING=STRING_J_K_$Char(9)
+	. Set STRING=STRING_$Char(13)
+	
+	Do EXCEL.ActiveSheet.Paste
+	Quit
