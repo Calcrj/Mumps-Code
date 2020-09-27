@@ -1,0 +1,12 @@
+;; How to use microsoft Outlook email
+	ZSetObj OutApp=$ZCreateObject("Outlook.Application")
+	ZSetObj OutMail=OutApp.CreateItem(0)
+	Set OutMail.To="calcrj@hotmail.com;me@yahoo.com"
+	Set OutMail.CC=""
+	Set OutMail.BCC=""
+	Set OutMail.Subject="Just test"
+	Set OutMail.Body="here some message for someone"
+	Do OutMail.Attachments.Add("c:\documents\invoice.pdf")
+	Do OutMail.Send
+	Kill OutMail,OutApp
+	Quit
