@@ -1,0 +1,46 @@
+INI	Set mdbFILE="C:\ISI\DB1.mdb"
+
+	ZSetObj DB=$ZCreateObject("ADODB.Connection")
+	ZSetObj RecSet=$ZCreateObject("ADODB.RecordSet")
+	ZSetObj Total=$ZCreateObject("ADODB.RecordSet")
+	Do DB.Open("Driver={Microsoft Access Driver (*.mdb)}; DBQ="_mdbFILE)
+	Do Total.Open("SELECT COUNT(CODFI) AS TOTAL FROM MOVIES",DB)
+
+	Write #,"** DB Connect"
+	Write !,"** Total lines: ",Total.Fields("TOTAL")
+	Do Total.Close
+	
+	For  Do COD Quit:COD=""
+	Quit
+                                                                                                    
+COD	Read !!,"Code Number: ",COD#10:60
+	If COD="" Do CLEAR Quit
+	If COD?1"!".E Do INSERT Quit
+	If COD?1"*".E Do SHOW Quit
+	New SQL
+	Set SQL="SELECT * FROM MOVIES WHERE CODFI="_COD
+	Do RecSet.Close
+	Do RecSet.Open(SQL,DB)
+	If RecSet.Eof=-1 Set ER="Not find" Do ER Quit
+	Write !,"> Title: ",RecSet.Fields("TIT")
+	Write !,"> Cat  : ",RecSet.Fields("CAT")
+	Quit
+                                                                                                                                
+INSERT	New I
+	Do DB.Execute("INSERT INTO MOVIES (CODFI,TIT,CAT) VALUES ('"_COD_"','"_TIT_"','"_CAT_"')")
+	Write !,"** Successful insert **"
+	Quit
+                                                                                                                               
+SHOW	Write !!,"===================================================="
+	Do RecSet.OPEN("SELECT * FROM MOVIES",DB)
+	Do RecSet.MoveFirst
+	For  Quit:RecSet.Eof=-1  Do
+	. Set COD=RecSet.Fields("CODFI")
+	. Set TIT=RecSet.Fields("TIT"),CAT=RecSet.Fields("CAT")
+	. Write !,TIT,?60,CAT
+	. Do RecSet.MoveNext
+	Write !,"===================================================="	
+	Quit
+
+CLEAR	Kill mdbFILE,DB,RecSet,Total
+	Quit
