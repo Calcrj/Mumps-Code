@@ -1,3 +1,5 @@
+	;; How to use MDB files
+	;; Carlos A L Cordovil
 INI	Set mdbFILE="C:\ISI\DB1.mdb"
 
 	ZSetObj DB=$ZCreateObject("ADODB.Connection")
