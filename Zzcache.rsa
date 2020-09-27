@@ -1,0 +1,166 @@
+10:58 AM  15-AUG-03
+COMMANDS/FUNCOES/VARIABLES CACHE - CARLOS A L CORDOVIL
+%ZZCMNDS
+%ZZCMDS ;CACHE COMMANDS [ 08/15/2006  10:57 AM ]
+ ;;CARLOS A L CORDOVIL
+ Q
+L N %IsX D
+ . I $0<1 S %IsX="" Q
+ . S %IsX=$1
+ . I %IsX?1"(".E,$E(%IsX,$L(%IsX))=")" Q
+ . S %IsX=$$ver(%IsX)_":0"
+ S CACHE.Code="K P0 L "_%IsX_" E  S P0=0" S CACHE.ExecFlag=1 Q
+ ;
+S N %IsX,%IsX1,%IsX2,%IsI S %IsX=$1
+ S %IsX1=$P(%IsX,"=",2,90),%IsX=$P(%IsX,"=",1),@("CACHE.P9="_%IsX1)
+ D  S CACHE.Code="S "_%IsX,CACHE.ExecFlag=1 Q
+ . I '(%IsX?1"$P".E!(%IsX?1"$p".E)!(%IsX?1"$E".E)!(%IsX?1"$e".E)) S %IsX=$$ver(%IsX)_"=P9" Q
+ . S %IsX1=%IsX,%IsX=$P(%IsX,"(",2,90)
+ . I $L(%IsX,")")-1=1 S %IsX2=","_$P(%IsX,",",2,10),%IsX=$P(%IsX,",",1)
+ . E  F %IsI=$L(%IsX)-1:-1:1 I $E(%IsX,%IsI)=")" S %IsX2=$E(%IsX,%IsI+1,90),%IsX=$E(%IsX,1,%IsI) Q
+ . S %IsX2=$E(%IsX2,1,$L(%IsX2)-1)
+ . F %IsI=2:1:$L(%IsX2,",") S @("$P(%IsX2,"","",%IsI)=$C(34)_"_$P(%IsX2,",",%IsI)_"_$C(34)")
+ . I $1?1"$P".E!($1?1"$p".E) S %IsX="$P("_$$ver(%IsX)_%IsX2_")=P9" Q
+ . I $1?1"$E".E!($1?1"$e".E) S %IsX="$E("_$$ver(%IsX)_%IsX2_")=P9"
+ ;
+M N %IsX1,%IsX2
+ S %IsX1=$$ver($P($1,"=",1)),%IsX2=$$ver($P($1,"=",2),5),%IsX2=$P(%IsX2,"(",1)_"("_$P(%IsX2,",",6,10)
+ S CACHE.Code="M "_%IsX1_"="_%IsX2,CACHE.ExecFlag=1 Q
+ ;
+K N %IsX S %IsX=$$ver($1),CACHE.Code="K "_%IsX,CACHE.ExecFlag=1 Q
+ Q
+ver(%IsX,%IsINI) I %IsX'["(" Q %IsX
+ N %IsI,%IsX1,%IsX2,%IsG,%IsP,%IsV,%IsO S %IsV=$G(%IsINI)
+ S %IsX1=$P(%IsX,"(",2,90),%IsX1=$E(%IsX1,1,$L(%IsX1)-1),%IsP=0,%IsG=1,%IsX1=%IsX1_","
+ F %IsI=1:1:$L(%IsX1) D
+ . I $E(%IsX1,%IsI)="(" S %IsP=%IsP+1 Q
+ . S:$E(%IsX1,%IsI)=")" %IsP=%IsP-1 Q:%IsP!($E(%IsX1,%IsI)'=",")
+ . S %IsO=$E(%IsX1,%IsG,%IsI-1) I $E(%IsO)'="""" S @("%IsO="_$E(%IsX1,%IsG,%IsI-1)) S:"+$"[$E(%IsO) @("%IsO="_%IsO) S %IsO=$C(34)_%IsO_$C(34)
+ . S %IsV=%IsV+1,$P(%IsX2,",",%IsV)=%IsO,%IsG=%IsI+1
+ S %IsX=$P(%IsX,"(")_"("_%IsX2_")" Q %IsX
+
+%ZZFUNCS
+%ZZFUNCS ;CACHE FUNCTIONS [ 07/20/2006  4:23 PM ]
+ ;;CARLOS A L CORDOVIL ой
+ Q
+ ;
+A() N %z0Yx,%z1Yx,%z2Yx,%z3Yx S %z1Yx=$1,%z2Yx=$2,%z3Yx=$3
+ F %z0Yx=1:1:$L(%z1Yx,",") I $P(%z1Yx,",",%z0Yx)'="" S @($P(%z1Yx,",",%z0Yx)_"=$P(%z3Yx,%z2Yx,%z0Yx)")
+ Q %z3Yx
+ ;
+WSET() N %z0Yx,%z1Yx,%z2Yx,%z3Yx,%z4Yx,%z5Yx,%z6Yx
+ S %z1Yx=$1,%z2Yx=$2,%z3Yx=$3,%z4Yx=$4,%z5Yx=$5
+ F %z0Yx=1:1:$L(%z1Yx,",") D
+ . Q:$P(%z1Yx,",",%z0Yx)=""  S %z6Yx=$P(%z4Yx,",",%z0Yx) S:%z4Yx="" %z6Yx=%z0Yx
+ . S @($P(%z1Yx,",",%z0Yx)_"=$P(%z3Yx,%z2Yx,%z6Yx)")
+ . I %z5Yx'="" S ^$W(%z5Yx,"G",$P(%z1Yx,",",%z0Yx),"VALUE")=$P(%z3Yx,%z2Yx,%z6Yx)
+ Q 1
+ ;
+E() N %z2Yx S %z2Yx=$S($0=2:"^",1:$3) Q $P($1,%z2Yx,$2)
+ ;
+G() S CACHE.Code="$G("_$$ver($1)_")",CACHE.ExecFlag=1 Q CACHE.Value
+ ;
+Q() S CACHE.Code="$Q("_$1_")",CACHE.ExecFlag=1 Q CACHE.Value
+ ;
+QL() S CACHE.P9=$1,CACHE.Code="$QL(P9)",CACHE.ExecFlag=1 Q CACHE.Value
+ ;
+QS() S CACHE.P9=$1,CACHE.Code="$QS(P9,"_$2_")",CACHE.ExecFlag=1 Q CACHE.Value
+ ;
+O() S CACHE.Code="$O("_$$ver($1)_")",CACHE.ExecFlag=1 Q CACHE.Value
+ ;
+N() N %z2Y S %z2Y="",$P(%z2Y,",",1)=""""_$2_""""
+ D  S CACHE.Code="$O("_$1_"("_%z2Y_"))",CACHE.ExecFlag=1 Q CACHE.Value
+ .I $0'<3 S $P(%z2Y,",",2)=""""_$3_"""" Q:$0=3
+ .I $0'<4 S $P(%z2Y,",",3)=""""_$4_"""" Q:$0=4
+ .I $0'<5 S $P(%z2Y,",",4)=""""_$5_"""" Q:$0=5
+ .I $0'<6 S $P(%z2Y,",",5)=""""_$6_"""" Q:$0=6
+ .I $0'<7 S $P(%z2Y,",",6)=""""_$7_"""" Q:$0=7
+ .I $0'<8 S $P(%z2Y,",",7)=""""_$8_"""" Q:$0=8
+ .I $0=9 S $P(%z2Y,",",8)=""""_$9_""""
+ Q
+ ;
+R() N %z2Y S %z2Y="",$P(%z2Y,",",1)=""""_$2_""""
+ D  S CACHE.Code="$O("_$1_"("_%z2Y_"),-1)",CACHE.ExecFlag=1 Q CACHE.Value
+ .I $0'<3 S $P(%z2Y,",",2)=""""_$3_"""" Q:$0=3
+ .I $0'<4 S $P(%z2Y,",",3)=""""_$4_"""" Q:$0=4
+ .I $0'<5 S $P(%z2Y,",",4)=""""_$5_"""" Q:$0=5
+ .I $0'<6 S $P(%z2Y,",",5)=""""_$6_"""" Q:$0=6
+ .I $0'<7 S $P(%z2Y,",",6)=""""_$7_"""" Q:$0=7
+ .I $0'<8 S $P(%z2Y,",",7)=""""_$8_"""" Q:$0=8
+ .I $0=9 S $P(%z2Y,",",8)=""""_$9_""""
+ Q
+ ;
+T() I $0<2 S CACHE.Code="$G("_$1_")",CACHE.ExecFlag=1 Q CACHE.Value
+ N %z2Y S %z2Y="",$P(%z2Y,",",1)=""""_$2_""""
+ D  S CACHE.Code="$G("_$1_"("_%z2Y_"))",CACHE.ExecFlag=1 Q CACHE.Value
+ .I $0'<3 S $P(%z2Y,",",2)=""""_$3_"""" Q:$0=3
+ .I $0'<4 S $P(%z2Y,",",3)=""""_$4_"""" Q:$0=4
+ .I $0'<5 S $P(%z2Y,",",4)=""""_$5_"""" Q:$0=5
+ .I $0'<6 S $P(%z2Y,",",5)=""""_$6_"""" Q:$0=6
+ .I $0'<7 S $P(%z2Y,",",6)=""""_$7_"""" Q:$0=7
+ .I $0'<8 S $P(%z2Y,",",7)=""""_$8_"""" Q:$0=8
+ .I $0=9 S $P(%z2Y,",",8)=""""_$9_""""
+ Q
+ ;
+P() S CACHE.Code="$O("_$$ver($1)_",-1)",CACHE.ExecFlag=1 Q CACHE.Value
+ ;
+D() S CACHE.Code="$D("_$$ver($1)_")",CACHE.ExecFlag=1 Q CACHE.Value
+ Q
+SOM() I $ZOS(4)>4 Q $$WINAPP^%HOSTCMD("MPLAY32 /PLAY /CLOSE "_$1,"HIDE")
+ I $ZOS(4)<5 Q $$WINAPP^%HOSTCMD("MPLAYER /PLAY /CLOSE "_$1,"HIDE")
+ Q
+EXEC() Q:$0=1 $$WINAPP^%HOSTCMD($1) Q:$0>1 $$WINAPP^%HOSTCMD($1,$2)
+ Q
+LTEXT() Q $WTWIDTH($1,$ZZFONTNAM,$ZZFONTSIZ,$P("NORMAL^BOLD","^",$ZZFONTBOL+1),"ZDLG")
+LNULL() Q $WTFIT($1,$2,$ZZFONTNAM,$ZZFONTSIZ,$P("NORMAL^BOLD","^",$ZZFONTBOL+1),"ZDLG")
+ ;
+ver(%IsX) I %IsX'["(" Q %IsX
+ N %IsI,%IsX1,%IsX2,%IsG,%IsP,%IsV,%IsO
+ S %IsX1=$P(%IsX,"(",2,90),%IsX1=$E(%IsX1,1,$L(%IsX1)-1),(%IsP,%IsV)=0,%IsG=1,%IsX1=%IsX1_","
+ F %IsI=1:1:$L(%IsX1) D
+ . I $E(%IsX1,%IsI)="(" S %IsP=%IsP+1 Q
+ . S:$E(%IsX1,%IsI)=")" %IsP=%IsP-1 Q:%IsP!($E(%IsX1,%IsI)'=",")
+ . S %IsO=$E(%IsX1,%IsG,%IsI-1) I $E(%IsO)'="""" S @("%IsO="_$E(%IsX1,%IsG,%IsI-1)) S:$E(%IsO)?1"+"!($E(%IsO)?1"$") @("%IsO="_%IsO) S %IsO=""""_%IsO_""""
+ . S %IsV=%IsV+1,$P(%IsX2,",",%IsV)=%IsO,%IsG=%IsI+1
+ S %IsX=$P(%IsX,"(")_"("_%IsX2_")" Q %IsX
+
+%ZZSVARS
+%ZZSVARS ;CACHE VARIABLES; [ 08/10/2006  3:16 PM ]
+ ;;CARLOS A L CORDOVIL
+ Q
+ ;
+H() S CACHE.Code="$H",CACHE.ExecFlag=1 Q CACHE.Value
+ ;
+T() S CACHE.Code="=P0",CACHE.ExecFlag=1 Q $S(CACHE=0:0,1:1)
+ ;
+NET() Q 1
+ ;
+I() I $G(%IsINode)'="" Q %IsINode
+ S %IsINode=1 I $ZOS(10,"ISI.INI")<0 Q 1
+ O 54:("ISI.INI") U 54 N X F  R X Q:$ZC=-1  I $$MA^%WUTI(X)["NODE" S %IsINode=$P(X,"=",2) Q
+ C 54 Q %IsINode
+ ;
+PATH() I $G(%IsIPath)'="" Q %IsIPath
+ S %IsIPath="USER" I $ZOS(10,"ISI.INI")<0 Q "USER"
+ O 54:("ISI.INI") U 54 N X F  R X Q:$ZC=-1  I $$MA^%WUTI(X)["PATH" S %IsIPath=$P(X,"=",2) Q
+ C 54 Q %IsIPath
+ ;
+IPSERVER() I $G(%IsIIpSer)'="" Q %IsIIpSer
+ S %IsIIpSer="127.0.0.1" I $ZOS(10,"ISI.INI")<0 Q "127.0.0.1"
+ O 54:("ISI.INI") U 54 N X F  R X Q:$ZC=-1  I $$MA^%WUTI(X)["IPSERVER" S %IsIIpSer=$P(X,"=",2) Q
+ C 54 Q %IsIIpSer
+ ;
+J() S CACHE.Code="=$JOB",CACHE.ExecFlag=1 Q CACHE
+ ;
+REMOTE() Q 0
+ ;
+FONT() Q ($ZZFONTNAM_","_$ZZFONTSIZ_","_$ZZFONTBOL_","_$ZZFONTUND_","_$ZZFONTITA)
+FONTNAM() Q ^$DEVICE(3,"ZPRT","FONT","NAME")
+FONTBOL() Q ^$DEVICE(3,"ZPRT","FONT","BOLD")
+FONTUND() Q ^$DEVICE(3,"ZPRT","FONT","UNDERLINE")
+FONTITA() Q ^$DEVICE(3,"ZPRT","FONT","ITALIC")
+FONTSIZ() Q ^$DEVICE(3,"ZPRT","FONT","SIZE")
+LPTNAME() Q ^$DEVICE(3,"ZPRT","PRINTER")
+
+
+
